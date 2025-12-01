@@ -1,0 +1,23 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Next.js Build Output
+/.next/
+/out/
+
+# Development
+.env*.local
+.env
+.env.production
+.vercel
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Mac/Linux System Files
+.DS_Store
+
+# Windows System Files
+Thumbs.db
