@@ -1,7 +1,8 @@
 // /app/api/send-email/route.ts
-import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { NextResponse } from 'next/server'; // 👈 ضروري لتعريف NextResponse
+import nodemailer from 'nodemailer'; // 👈 ضروري لتعريف Nodemailer
 
+// واجهة تعريف البيانات (Interface)
 interface FormData {
     fullName: string;
     email: string;
@@ -14,15 +15,18 @@ interface FormData {
 }
 
 // 1. إعداد مرسل البريد الإلكتروني (Transporter)
+// التكوين اليدوي لخادم SMTP الآمن (لحل مشكلة الاتصال/Timeout)
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, 
+    requireTLS: true, 
     auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_APP_PASSWORD,
     },
-    // 📢 هذه الخيارات هي الأهم لتحديد سبب الفشل
-    logger: true, // لتسجيل رسائل حالة الاتصال
-    debug: true // لتسجيل تفاصيل بروتوكول الاتصال
+    logger: true,
+    debug: true
 });
 
 export async function POST(request: Request) {
@@ -38,7 +42,7 @@ export async function POST(request: Request) {
     try {
         const formData: FormData = await request.json();
 
-        // 2. التحقق الأساسي من الحقول المطلوبة (يمكنك تخصيص هذا)
+        // 2. التحقق الأساسي من الحقول المطلوبة
         if (!formData.fullName || !formData.email || !formData.projectName) {
             return NextResponse.json({ 
                 message: 'الرجاء ملء الاسم الكامل والبريد الإلكتروني واسم المشروع.', 
@@ -68,14 +72,14 @@ export async function POST(request: Request) {
         const mailOptions = {
             from: process.env.GMAIL_USER,
             to: process.env.COMPANY_RECEIVING_EMAIL,
-            subject: `طلب استشارة جديد: ${formData.projectName} من ${formData.fullName}`,
+            subject: \`طلب استشارة جديد: \${formData.projectName} من \${formData.fullName}\`,
             html: htmlContent,
             replyTo: formData.email, 
         };
 
         // 5. إرسال البريد الإلكتروني
         const info = await transporter.sendMail(mailOptions);
-        console.log("Email sent successfully. Response:", info.response); // طباعة الرد الناجح
+        console.log("Email sent successfully. Response:", info.response);
 
         // 6. الاستجابة بالنجاح
         return NextResponse.json({ 
@@ -84,10 +88,9 @@ export async function POST(request: Request) {
         }, { status: 200 });
 
     } catch (error) {
-        // طباعة الخطأ التفصيلي الذي نحتاجه
+        // 7. طباعة الخطأ التفصيلي (للتشخيص)
         console.error('Email sending error details:', error);
         
-        // 7. الاستجابة بالخطأ
         return NextResponse.json({ 
             message: 'فشل في إرسال البريد الإلكتروني. راجع سجلات Vercel للأسباب.', 
             status: 'error' 
