@@ -2,9 +2,10 @@
 
 import React, { useState, FormEvent } from "react"
 import { Button } from "@/components/ui/button"
-// 👈 تم تعديل الاستيراد هنا لحل خطأ TS2724
+// 👈 تم تصحيح المسار ليتطابق مع ما هو موجود في الملفات: hooks/use-language
 import { useLanguage } from "@/lib/hooks/use-language" 
 import { getTranslation } from "@/lib/i18n"
+// ... بقية الاستيرادات ...
 import { cn } from "@/lib/utils" 
 
 // تعريف نوع البيانات لحالة النموذج
