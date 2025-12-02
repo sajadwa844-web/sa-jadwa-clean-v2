@@ -2,14 +2,14 @@
 
 import React, { useState, FormEvent } from "react"
 import { Button } from "@/components/ui/button"
-// 👈 تم تصحيح المسار ليتطابق مع ما هو موجود في الملفات: hooks/use-language
+// 👈 تم تصحيح المسار ليتطابق مع: "@/lib/hooks/use-language"
 import { useLanguage } from "@/lib/hooks/use-language" 
 import { getTranslation } from "@/lib/i18n"
-// ... بقية الاستيرادات ...
 import { cn } from "@/lib/utils" 
 
 // تعريف نوع البيانات لحالة النموذج
 type FormData = {
+// ... (بقية الكود تبقى كما هي)
   fullName: string
   email: string
   company: string
@@ -35,10 +35,7 @@ export default function ContactForm() {
     description: "",
   })
   
-  // 2. إدارة حالة الإرسال والرسائل
-  const [loading, setLoading] = useState(false)
-  const [statusMessage, setStatusMessage] = useState("")
-  const [isError, setIsError] = useState(false)
+  // ... (بقية الكود تبقى كما هي) ...
 
   // دالة لتحديث حالة الحقول
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -55,6 +52,7 @@ export default function ContactForm() {
 
   // 3. دالة معالجة الإرسال (POST Request)
   const handleSubmit = async (e: FormEvent) => {
+// ... (بقية الكود تبقى كما هي) ...
     e.preventDefault()
     setLoading(true)
     setStatusMessage("")
