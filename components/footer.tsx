@@ -13,7 +13,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 gap-8 mb-8 pb-8 border-b border-slate-700">
           {/* Contact Details */}
           <div className={`space-y-4 ${isRTL ? "text-right" : "text-left"}`}>
-            <h3 className="text-xl font-bold mb-4">SA Jadwa</h3>
+            <h3 className="text-xl font-bold mb-4">S&A for Feasibility Studies and Corporate Restructuring</h3>
             <div className="space-y-3">
               <div>
                 <p className="text-slate-400 text-sm font-semibold mb-1">
@@ -57,7 +57,7 @@ export default function Footer() {
             <h3 className="text-xl font-bold mb-4">{getTranslation(language, "footer.followUs")}</h3>
             <div className="flex gap-4 justify-start md:justify-end flex-wrap">
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/SnAJadwa"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 bg-slate-700 rounded-lg hover:bg-blue-600 transition-all text-lg"
@@ -66,7 +66,7 @@ export default function Footer() {
                 f
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/snajadwa/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 bg-slate-700 rounded-lg hover:bg-pink-600 transition-all text-lg"
@@ -75,7 +75,7 @@ export default function Footer() {
                 📷
               </a>
               <a
-                href="https://twitter.com"
+                href="https://x.com/SnAJadwa"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 bg-slate-700 rounded-lg hover:bg-blue-500 transition-all text-lg"
@@ -84,16 +84,16 @@ export default function Footer() {
                 𝕏
               </a>
               <a
-                href="https://snapchat.com"
+                href="https://www.linkedin.com/company/13996382/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 bg-slate-700 rounded-lg hover:bg-yellow-500 transition-all text-lg"
-                title="Snapchat"
+                className="p-3 bg-slate-700 rounded-lg hover:bg-blue-500 transition-all text-lg"
+                title="linkedin"
               >
-                👻
+                🔗
               </a>
               <a
-                href="https://tiktok.com"
+                href="https://www.tiktok.com/@snajadwa?_r=1&_t=ZS-91r3iIhWNRn"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 bg-slate-700 rounded-lg hover:bg-black transition-all text-lg"
