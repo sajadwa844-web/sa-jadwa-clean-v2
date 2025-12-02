@@ -2,14 +2,12 @@
 
 import React, { useState, FormEvent } from "react"
 import { Button } from "@/components/ui/button"
-// 👈 تم تصحيح المسار ليتطابق مع: "@/lib/hooks/use-language"
 import { useLanguage } from "@/lib/hooks/use-language" 
 import { getTranslation } from "@/lib/i18n"
 import { cn } from "@/lib/utils" 
 
 // تعريف نوع البيانات لحالة النموذج
 type FormData = {
-// ... (بقية الكود تبقى كما هي)
   fullName: string
   email: string
   company: string
@@ -35,11 +33,13 @@ export default function ContactForm() {
     description: "",
   })
   
-  // ... (بقية الكود تبقى كما هي) ...
+  // 2. إدارة حالة الإرسال (تم إضافتها لأنها كانت مفقودة في الكود المرفق)
+  const [loading, setLoading] = useState(false)
+  const [statusMessage, setStatusMessage] = useState("")
+  const [isError, setIsError] = useState(false)
 
   // دالة لتحديث حالة الحقول
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    // التأكد من أن الحقل الذي يتم تغييره له خاصية 'name'
     if (e.target.name) {
         setFormData({
             ...formData,
@@ -50,28 +50,25 @@ export default function ContactForm() {
     if (statusMessage) setStatusMessage("") 
   }
 
-  // 3. دالة معالجة الإرسال (POST Request)
+  // 3. دالة معالجة الإرسال (POST Request) - تم تبسيط رسالة التحقق
   const handleSubmit = async (e: FormEvent) => {
-// ... (بقية الكود تبقى كما هي) ...
     e.preventDefault()
     setLoading(true)
     setStatusMessage("")
     setIsError(false)
 
     // التحقق من الحقول المطلوبة (FullName, Email, ProjectName)
-    // هذا التحقق هو الذي يسبب رسالة الخطأ إذا لم يتم تمريره
     if (!formData.fullName || !formData.email || !formData.projectName) {
       setIsError(true)
-      setStatusMessage(getTranslation(language, "form.error"))
+      setStatusMessage(getTranslation(language, "form.error") || (isRTL ? "الرجاء ملء جميع الحقول المطلوبة (الاسم، البريد الإلكتروني، اسم المشروع)." : "Please fill in all required fields (Name, Email, Project Name)."))
       setLoading(false)
-      // قد تكون رسالة الخطأ الإنجليزية التي رأيتها هي رسالة متصفح تلقائية
-      // إذا كنت تستخدم الحقل required دون التحقق من حالة النموذج هنا
-      alert("Please fill in Full Name, Email, and Project Name.") 
+      // *تم إزالة alert() لأنه يقطع تجربة المستخدم، واستبداله بعرض رسالة الحالة*
       return
     }
     
-    // إذا كان التحقق ناجحاً، يبدأ الإرسال الفعلي:
+    // الإرسال الفعلي:
     try {
+      // ⚠️ تأكد من أن المسار "/api/send-email" صحيح ويعمل على Vercel
       const response = await fetch("/api/send-email", {
         method: "POST",
         headers: {
@@ -83,14 +80,15 @@ export default function ContactForm() {
       const data = await response.json()
 
       if (response.ok) {
-        setStatusMessage(getTranslation(language, "form.success"))
+        setStatusMessage(getTranslation(language, "form.success") || (isRTL ? "تم إرسال رسالتك بنجاح!" : "Your message has been sent successfully!"))
         setFormData({ // مسح النموذج بعد النجاح
           fullName: "", email: "", company: "", phone: "",
           projectName: "", location: "", capital: "", description: ""
         })
       } else {
         setIsError(true)
-        setStatusMessage(data.message || getTranslation(language, "form.error"))
+        // عرض رسالة الخطأ التي تأتي من الخادم (دالة route.ts)
+        setStatusMessage(data.message || getTranslation(language, "form.error") || (isRTL ? "فشل إرسال النموذج. يرجى مراجعة إعدادات الخادم." : "Form submission failed. Please check server settings."))
       }
     } catch (error) {
       console.error("Submission error:", error)
@@ -123,11 +121,11 @@ export default function ContactForm() {
               </label>
               <input
                 type="text"
-                name="fullName" // 👈 يجب أن يكون مطابقاً لاسم المفتاح في formData
+                name="fullName"
                 id="fullName"
-                value={formData.fullName} // 👈 ربط الحالة
+                value={formData.fullName}
                 onChange={handleChange}
-                required // علامة required HTML
+                required
                 placeholder={isRTL ? getTranslation(language, "form.fullNameAr") : getTranslation(language, "form.fullName")}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
               />
@@ -140,11 +138,11 @@ export default function ContactForm() {
               </label>
               <input
                 type="email"
-                name="email" // 👈 يجب أن يكون مطابقاً لاسم المفتاح في formData
+                name="email"
                 id="email"
-                value={formData.email} // 👈 ربط الحالة
+                value={formData.email}
                 onChange={handleChange}
-                required // علامة required HTML
+                required
                 placeholder={isRTL ? getTranslation(language, "form.emailAr") : getTranslation(language, "form.email")}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
               />
@@ -191,11 +189,11 @@ export default function ContactForm() {
               </label>
               <input
                 type="text"
-                name="projectName" // 👈 يجب أن يكون مطابقاً لاسم المفتاح في formData
+                name="projectName"
                 id="projectName"
-                value={formData.projectName} // 👈 ربط الحالة
+                value={formData.projectName}
                 onChange={handleChange}
-                required // علامة required HTML
+                required
                 placeholder={isRTL ? getTranslation(language, "form.projectNameAr") : getTranslation(language, "form.projectName")}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
               />
@@ -271,7 +269,7 @@ export default function ContactForm() {
             disabled={loading}
             className="w-full py-3 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-50"
           >
-            {loading ? "جاري الإرسال..." : getTranslation(language, isRTL ? "form.submitAr" : "form.submit")}
+            {loading ? (isRTL ? "جاري الإرسال..." : "Sending...") : getTranslation(language, isRTL ? "form.submitAr" : "form.submit")}
           </Button>
           
         </form>
