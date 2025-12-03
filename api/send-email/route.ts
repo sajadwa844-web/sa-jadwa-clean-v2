@@ -15,20 +15,11 @@ interface FormData {
 }
 
 export async function POST(request: Request) {
-    // ⚠️ التحقق من المتغيرات البيئية
-    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD || !process.env.COMPANY_RECEIVING_EMAIL) {
-        console.error("Missing email configuration environment variables.");
-        return NextResponse.json({ 
-            message: 'خطأ في إعدادات الخادم لإرسال البريد الإلكتروني. (راجع GMAIL_USER/PASSWORD)', 
-            status: 'error' 
-        }, { status: 500 });
-    }
-    
-    // 1. تعريف Transporter داخل دالة POST (لتجنب مشاكل الخوادم اللامركزية)
+    // ... (بقية التحقق من المتغيرات و Transporter) ...
     const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com', // المضيف
-        port: 465, // المنفذ الآمن SSL/TLS
-        secure: true, // يجب أن تكون true للمنفذ 465
+        host: 'smtp.gmail.com', 
+        port: 465, 
+        secure: true, 
         auth: {
             user: process.env.GMAIL_USER,
             pass: process.env.GMAIL_APP_PASSWORD,
@@ -37,10 +28,12 @@ export async function POST(request: Request) {
         debug: true
     });
     
+    // ... (بقية الدالة) ...
+    
     try {
         const formData: FormData = await request.json();
 
-        // 2. التحقق الأساسي من الحقول المطلوبة
+        // 2. التحقق الأساسي من الحقول المطلوبة (مهم الآن للحماية من الأخطاء في الخادم)
         if (!formData.fullName || !formData.email || !formData.projectName) {
             return NextResponse.json({ 
                 message: 'الرجاء ملء الاسم الكامل والبريد الإلكتروني واسم المشروع.', 
@@ -68,10 +61,10 @@ export async function POST(request: Request) {
 
         // 4. إعداد خيارات البريد
         const mailOptions = {
-            // 💡 إضافة اسم لـ 'From' لزيادة موثوقية Gmail
             from: `"SA Jadwa Contact" <${process.env.GMAIL_USER}>`, 
             to: process.env.COMPANY_RECEIVING_EMAIL,
-            subject: \`طلب استشارة جديد: \${formData.projectName} من \${formData.fullName}\`,
+            // 👈 تم تصحيح علامات الاقتباس هنا إلى الباك تيك (Backticks)
+            subject: `طلب استشارة جديد: ${formData.projectName} من ${formData.fullName}`, 
             html: htmlContent,
             replyTo: formData.email, 
         };
