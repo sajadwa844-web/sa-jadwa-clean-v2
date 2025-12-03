@@ -1,6 +1,6 @@
 // /app/api/send-email/route.ts
-import { NextResponse } from 'next/server'; // 👈 ضروري لتعريف NextResponse
-import nodemailer from 'nodemailer'; // 👈 ضروري لتعريف Nodemailer
+import { NextResponse } from 'next/server'; 
+import nodemailer from 'nodemailer'; 
 
 // واجهة تعريف البيانات (Interface)
 interface FormData {
@@ -14,21 +14,6 @@ interface FormData {
     description: string;
 }
 
-// 1. إعداد مرسل البريد الإلكتروني (Transporter)
-// التكوين اليدوي لخادم SMTP الآمن (لحل مشكلة الاتصال/Timeout)
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, 
-    requireTLS: true, 
-    auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
-    },
-    logger: true,
-    debug: true
-});
-
 export async function POST(request: Request) {
     // ⚠️ التحقق من المتغيرات البيئية
     if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD || !process.env.COMPANY_RECEIVING_EMAIL) {
@@ -38,6 +23,19 @@ export async function POST(request: Request) {
             status: 'error' 
         }, { status: 500 });
     }
+    
+    // 1. تعريف Transporter داخل دالة POST (لتجنب مشاكل الخوادم اللامركزية)
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com', // المضيف
+        port: 465, // المنفذ الآمن SSL/TLS
+        secure: true, // يجب أن تكون true للمنفذ 465
+        auth: {
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_APP_PASSWORD,
+        },
+        logger: true,
+        debug: true
+    });
     
     try {
         const formData: FormData = await request.json();
@@ -70,7 +68,8 @@ export async function POST(request: Request) {
 
         // 4. إعداد خيارات البريد
         const mailOptions = {
-            from: process.env.GMAIL_USER,
+            // 💡 إضافة اسم لـ 'From' لزيادة موثوقية Gmail
+            from: `"SA Jadwa Contact" <${process.env.GMAIL_USER}>`, 
             to: process.env.COMPANY_RECEIVING_EMAIL,
             subject: \`طلب استشارة جديد: \${formData.projectName} من \${formData.fullName}\`,
             html: htmlContent,
