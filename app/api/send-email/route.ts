@@ -24,11 +24,11 @@ export async function POST(request: Request) {
         }, { status: 500 });
     }
     
-    // 1. تعريف Transporter داخل دالة POST (لتحسين أداء الخوادم اللامركزية)
+    // 1. تعريف Transporter داخل دالة POST (باستخدام المنفذ الآمن 465)
     const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com', // المضيف
-        port: 465, // المنفذ الآمن SSL/TLS
-        secure: true, // يجب أن تكون true للمنفذ 465
+        host: 'smtp.gmail.com',
+        port: 465, 
+        secure: true, 
         auth: {
             user: process.env.GMAIL_USER,
             pass: process.env.GMAIL_APP_PASSWORD,
@@ -40,15 +40,15 @@ export async function POST(request: Request) {
     try {
         const formData: FormData = await request.json();
 
-        // 2. التحقق الأساسي من الحقول المطلوبة
-        if (!formData.fullName || !formData.email || !formData.projectName) {
+        // 2. التحقق من الحقول الأساسية المطلوبة: الاسم، الإيميل، الهاتف
+        if (!formData.fullName || !formData.email || !formData.phone) { 
             return NextResponse.json({ 
-                message: 'الرجاء ملء الاسم الكامل والبريد الإلكتروني واسم المشروع.', 
+                message: 'الرجاء ملء الاسم الكامل والبريد الإلكتروني ورقم الهاتف أولاً.', 
                 status: 'error' 
             }, { status: 400 });
         }
 
-        // 3. بناء محتوى البريد الإلكتروني (بدون تغيير)
+        // 3. بناء محتوى البريد الإلكتروني
         const htmlContent = `
             <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #eee; max-width: 600px; margin: auto;">
                 <h2 style="color: #0056b3;">طلب استشارة جديد</h2>
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
                 <p><strong>رقم الهاتف:</strong> ${formData.phone || 'غير محدد'}</p>
                 <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
                 <h3 style="color: #333;">تفاصيل المشروع:</h3>
-                <p><strong>اسم المشروع:</strong> ${formData.projectName}</p>
+                <p><strong>اسم المشروع:</strong> ${formData.projectName || 'غير محدد'}</p>
                 <p><strong>موقع المشروع:</strong> ${formData.location || 'غير محدد'}</p>
                 <p><strong>رأس المال التقديري:</strong> ${formData.capital || 'غير محدد'}</p>
                 <p><strong>الوصف الإضافي:</strong></p>
@@ -70,7 +70,6 @@ export async function POST(request: Request) {
         const mailOptions = {
             from: `"SA Jadwa Contact" <${process.env.GMAIL_USER}>`, 
             to: process.env.COMPANY_RECEIVING_EMAIL,
-            // 👈 تم تصحيح علامات الاقتباس إلى الباك تيك (Backticks)
             subject: `طلب استشارة جديد: ${formData.projectName} من ${formData.fullName}`, 
             html: htmlContent,
             replyTo: formData.email, 
