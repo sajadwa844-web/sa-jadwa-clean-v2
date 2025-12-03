@@ -115,7 +115,7 @@ export default function ContactForm() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             
-            {/* 1. Full Name - مطلوب */}
+            {/* 1. Full Name - مطلوب (الحد الأدنى) */}
             <div>
               <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.fullName")} <span className="text-red-500">*</span></label>
               <Input
@@ -130,7 +130,7 @@ export default function ContactForm() {
               />
             </div>
 
-            {/* 2. Email - مطلوب */}
+            {/* 2. Email - مطلوب (الحد الأدنى) */}
             <div>
               <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.email")} <span className="text-red-500">*</span></label>
               <Input
@@ -145,9 +145,9 @@ export default function ContactForm() {
               />
             </div>
 
-            {/* 3. Company Name - مطلوب */}
+            {/* 3. Company Name - اختياري */}
             <div>
-              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.company")} <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.company")}</label>
               <Input
                 type="text"
                 name="company"
@@ -156,11 +156,11 @@ export default function ContactForm() {
                 placeholder={getTranslation(language, "form.company")}
                 className="w-full"
                 dir={isRTL ? "rtl" : "ltr"}
-                required
+                // تمت إزالة required
               />
             </div>
 
-            {/* 4. Phone Number - مطلوب */}
+            {/* 4. Phone Number - مطلوب (الحد الأدنى) */}
             <div>
               <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.phone")} <span className="text-red-500">*</span></label>
               <Input
@@ -175,9 +175,9 @@ export default function ContactForm() {
               />
             </div>
 
-            {/* 5. Project Name - مطلوب */}
+            {/* 5. Project Name - اختياري */}
             <div>
-              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.projectName")} <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.projectName")}</label>
               <Input
                 type="text"
                 name="projectName"
@@ -186,13 +186,13 @@ export default function ContactForm() {
                 placeholder={getTranslation(language, "form.projectName")}
                 className="w-full"
                 dir={isRTL ? "rtl" : "ltr"}
-                required
+                // تمت إزالة required
               />
             </div>
 
-            {/* 6. Project Location - مطلوب */}
+            {/* 6. Project Location - اختياري */}
             <div>
-              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.location")} <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.location")}</label>
               <Input
                 type="text"
                 name="location"
@@ -201,13 +201,13 @@ export default function ContactForm() {
                 placeholder={getTranslation(language, "form.location")}
                 className="w-full"
                 dir={isRTL ? "rtl" : "ltr"}
-                required
+                // تمت إزالة required
               />
             </div>
 
-            {/* 7. Investment Capital - مطلوب */}
+            {/* 7. Investment Capital - اختياري */}
             <div>
-              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.capital")} <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.capital")}</label>
               <Input
                 type="text" 
                 name="capital"
@@ -216,13 +216,13 @@ export default function ContactForm() {
                 placeholder={getTranslation(language, "form.capital")}
                 className="w-full"
                 dir="ltr"
-                required
+                // تمت إزالة required
               />
             </div>
 
-            {/* 8. Additional Description - مطلوب */}
+            {/* 8. Additional Description - اختياري */}
             <div>
-              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.description")} <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.description")}</label>
               <Textarea
                 name="description"
                 value={formData.description}
@@ -230,7 +230,7 @@ export default function ContactForm() {
                 placeholder={getTranslation(language, "form.description")}
                 className="w-full min-h-32"
                 dir={isRTL ? "rtl" : "ltr"}
-                required
+                // تمت إزالة required
               />
             </div>
 
