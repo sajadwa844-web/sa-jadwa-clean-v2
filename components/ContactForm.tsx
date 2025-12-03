@@ -52,10 +52,10 @@ export default function ContactForm() {
     setStatusMessage("")
     setIsError(false)
 
-    // 🛑 التحقق من الحقول الإلزامية الجديدة: الاسم، الإيميل، الهاتف
-    if (!formData.fullName || !formData.email || !formData.phone) {
+    // 🛑 التحقق من الحقول الإلزامية الجديدة: الاسم، الهاتف، اسم المشروع
+    if (!formData.fullName || !formData.phone || !formData.projectName) {
       setIsError(true)
-      setStatusMessage(getTranslation(language, "form.error") || (isRTL ? "الرجاء ملء الاسم الكامل، البريد الإلكتروني ورقم الهاتف أولاً." : "Please fill in Name, Email, and Phone Number first."))
+      setStatusMessage(getTranslation(language, "form.error") || (isRTL ? "الرجاء ملء الاسم الكامل، رقم الهاتف واسم المشروع أولاً." : "Please fill in Name, Phone Number, and Project Name first."))
       setLoading(false)
       return 
     }
@@ -115,7 +115,7 @@ export default function ContactForm() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             
-            {/* 1. Full Name - مطلوب (الحد الأدنى) */}
+            {/* 1. Full Name - مطلوب */}
             <div>
               <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.fullName")} <span className="text-red-500">*</span></label>
               <Input
@@ -130,9 +130,9 @@ export default function ContactForm() {
               />
             </div>
 
-            {/* 2. Email - مطلوب (الحد الأدنى) */}
+            {/* 2. Email - اختياري */}
             <div>
-              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.email")} <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.email")}</label>
               <Input
                 type="email"
                 name="email"
@@ -141,7 +141,7 @@ export default function ContactForm() {
                 placeholder={getTranslation(language, "form.email")}
                 className="w-full"
                 dir="ltr"
-                required
+                // تم إزالة required
               />
             </div>
 
@@ -156,11 +156,11 @@ export default function ContactForm() {
                 placeholder={getTranslation(language, "form.company")}
                 className="w-full"
                 dir={isRTL ? "rtl" : "ltr"}
-                // تمت إزالة required
+                // تم إزالة required
               />
             </div>
 
-            {/* 4. Phone Number - مطلوب (الحد الأدنى) */}
+            {/* 4. Phone Number - مطلوب */}
             <div>
               <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.phone")} <span className="text-red-500">*</span></label>
               <Input
@@ -175,9 +175,9 @@ export default function ContactForm() {
               />
             </div>
 
-            {/* 5. Project Name - اختياري */}
+            {/* 5. Project Name - مطلوب */}
             <div>
-              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.projectName")}</label>
+              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.projectName")} <span className="text-red-500">*</span></label>
               <Input
                 type="text"
                 name="projectName"
@@ -186,7 +186,7 @@ export default function ContactForm() {
                 placeholder={getTranslation(language, "form.projectName")}
                 className="w-full"
                 dir={isRTL ? "rtl" : "ltr"}
-                // تمت إزالة required
+                required
               />
             </div>
 
@@ -201,7 +201,7 @@ export default function ContactForm() {
                 placeholder={getTranslation(language, "form.location")}
                 className="w-full"
                 dir={isRTL ? "rtl" : "ltr"}
-                // تمت إزالة required
+                // تم إزالة required
               />
             </div>
 
@@ -216,7 +216,7 @@ export default function ContactForm() {
                 placeholder={getTranslation(language, "form.capital")}
                 className="w-full"
                 dir="ltr"
-                // تمت إزالة required
+                // تم إزالة required
               />
             </div>
 
@@ -230,7 +230,7 @@ export default function ContactForm() {
                 placeholder={getTranslation(language, "form.description")}
                 className="w-full min-h-32"
                 dir={isRTL ? "rtl" : "ltr"}
-                // تمت إزالة required
+                // تم إزالة required
               />
             </div>
 
