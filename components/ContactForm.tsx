@@ -1,4 +1,4 @@
-// src/components/contact-form.tsx
+// src/components/ContactForm.tsx
 "use client"
 
 import type React from "react"
@@ -51,16 +51,6 @@ export default function ContactForm() {
     setLoading(true)
     setStatusMessage("")
     setIsError(false)
-
-    // 🛑 تم إلغاء التحقق المسبق لضمان أننا نصل إلى الـ fetch
-    /*
-    if (!formData.fullName || !formData.email || !formData.projectName) {
-      setIsError(true)
-      setStatusMessage(isRTL ? "الرجاء ملء الاسم، البريد الإلكتروني واسم المشروع." : "Please fill in all required fields.")
-      setLoading(false)
-      return
-    }
-    */
     
     // 🚀 الإرسال الفعلي
     try {
@@ -75,14 +65,14 @@ export default function ContactForm() {
       const data = await response.json()
 
       if (response.ok) {
-        setStatusMessage(getTranslation(language, "form.success"))
+        setStatusMessage(getTranslation(language, "form.success") || (isRTL ? "تم إرسال النموذج بنجاح!" : "Form submitted successfully!"))
         setFormData({ 
           fullName: "", email: "", company: "", phone: "",
           projectName: "", location: "", capital: "", description: ""
         })
       } else {
         setIsError(true)
-        setStatusMessage(data.message || getTranslation(language, "form.error"))
+        setStatusMessage(data.message || getTranslation(language, "form.error") || (isRTL ? "فشل الإرسال. تحقق من السجلات." : "Submission failed. Check logs."))
       }
     } catch (error) {
       console.error("Submission error:", error)
@@ -93,14 +83,15 @@ export default function ContactForm() {
     }
   }
 
-  // كود العرض يبقى كما هو
   return (
     <section id="contact-form" className="py-20 px-4 bg-gradient-to-b from-background to-background/80">
       <div className="max-w-3xl mx-auto">
         <Card className="border border-border bg-card/50 backdrop-blur-sm p-8 md:p-12">
-          
-          {/* ... (العنوان ورسالة الحالة) ... */}
-          
+          {/* Form Title */}
+          <h2 className="text-4xl font-bold mb-2 text-center text-primary">{getTranslation(language, "form.title")}</h2>
+          <div className="h-1 w-16 bg-gradient-to-r from-blue-500 to-amber-500 mx-auto mb-8" />
+
+          {/* رسالة الحالة */}
           {statusMessage && (
             <div
               className={cn(
@@ -115,7 +106,8 @@ export default function ContactForm() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Full Name */}
+            
+            {/* 1. Full Name - مطلوب */}
             <div>
               <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.fullName")} <span className="text-red-500">*</span></label>
               <Input
@@ -129,8 +121,8 @@ export default function ContactForm() {
                 required
               />
             </div>
-            
-            {/* Email */}
+
+            {/* 2. Email - مطلوب */}
             <div>
               <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.email")} <span className="text-red-500">*</span></label>
               <Input
@@ -144,9 +136,36 @@ export default function ContactForm() {
                 required
               />
             </div>
-            
-            {/* ... (بقية الحقول) ... */}
-            {/* Project Name (مطلوب) */}
+
+            {/* 3. Company Name */}
+            <div>
+              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.company")}</label>
+              <Input
+                type="text"
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+                placeholder={getTranslation(language, "form.company")}
+                className="w-full"
+                dir={isRTL ? "rtl" : "ltr"}
+              />
+            </div>
+
+            {/* 4. Phone Number */}
+            <div>
+              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.phone")}</label>
+              <Input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder={getTranslation(language, "form.phone")}
+                className="w-full"
+                dir="ltr"
+              />
+            </div>
+
+            {/* 5. Project Name - مطلوب */}
             <div>
               <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.projectName")} <span className="text-red-500">*</span></label>
               <Input
@@ -160,6 +179,48 @@ export default function ContactForm() {
                 required
               />
             </div>
+
+            {/* 6. Project Location */}
+            <div>
+              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.location")}</label>
+              <Input
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                placeholder={getTranslation(language, "form.location")}
+                className="w-full"
+                dir={isRTL ? "rtl" : "ltr"}
+              />
+            </div>
+
+            {/* 7. Investment Capital */}
+            <div>
+              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.capital")}</label>
+              <Input
+                type="text" 
+                name="capital"
+                value={formData.capital}
+                onChange={handleChange}
+                placeholder={getTranslation(language, "form.capital")}
+                className="w-full"
+                dir="ltr"
+              />
+            </div>
+
+            {/* 8. Additional Description */}
+            <div>
+              <label className="block text-sm font-medium mb-2">{getTranslation(language, "form.description")}</label>
+              <Textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder={getTranslation(language, "form.description")}
+                className="w-full min-h-32"
+                dir={isRTL ? "rtl" : "ltr"}
+              />
+            </div>
+
 
             {/* Submit Button */}
             <Button
